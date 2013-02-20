@@ -17,7 +17,7 @@ module RailsConfig
     end
 
     # look through all our sources and rebuild the configuration
-    def reload!
+    def reload!(knockout_prefix='-----')
       conf = {}
       @config_sources.each do |source|
         source_conf = source.load
@@ -25,7 +25,7 @@ module RailsConfig
         if conf.empty?
           conf = source_conf
         else
-          DeepMerge.deep_merge!(source_conf, conf, :preserve_unmergeables => false)
+          DeepMerge.deep_merge!(source_conf, conf, :preserve_unmergeables => false, :knockout_prefix => knockout_prefix)
         end
       end
 
@@ -75,7 +75,7 @@ module RailsConfig
     def []=(param, value)
       send("#{param}=", value)
     end
-    
+
     protected
 
     # Recursively converts Hashes to Options (including Hashes inside Arrays)
